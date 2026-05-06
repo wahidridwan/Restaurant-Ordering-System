@@ -1,0 +1,3 @@
+# Mark CSS files as vendored to exclude them from GitHub language statistics
+# This will make JavaScript appear as the primary language of the repository
+css/** linguist-vendored
