@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="Rannaghor - Authentic Bangladeshi Cuisine. Order delicious food directly from your table.">
+    <meta name="theme-color" content="#1a0a00">
+    <title>Rannaghor - Authentic Bangladeshi Cuisine</title>
+
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- QR Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <!-- ==================== -->
+    <!-- WELCOME SCREEN -->
+    <!-- ==================== -->
+    <div id="welcomeScreen" class="welcome-screen-new">
+        <div class="welcome-wrapper">
+            <!-- Compact Header -->
+            <div class="welcome-brand">
+                <div class="brand-icon-lg">
+                    <img src="assets/images/logo.png" alt="Rannaghor Logo">
+                </div>
+                <h1 class="brand-title">Rannaghor</h1>
+                <p class="brand-subtitle">Authentic Bangladeshi Cuisine</p>
+            </div>
+
+            <!-- QR Scanner Container -->
+            <div id="scannerSection" class="scanner-section hidden">
+                <div class="scanner-header">
+                    <span class="scanner-icon"><i data-lucide="camera"></i></span>
+                    <span class="scanner-title">SCAN TO START YOUR ORDER</span>
+                </div>
+                <div id="reader" class="qr-reader"></div>
+                <div class="scanner-hint">Point your camera at the QR code on your table</div>
+            </div>
+
+            <!-- Manual Selection Fallback -->
+            <div id="manualSelection" class="manual-selector">
+                <h2 class="selector-title">Select Your Table</h2>
+                <div class="table-grid-premium">
+                    <button class="table-card-premium" data-table="1">
+                        <span class="table-card-icon"><i data-lucide="armchair"></i></span>
+                        <span class="table-card-number">Table 1</span>
+                    </button>
+                    <button class="table-card-premium" data-table="2">
+                        <span class="table-card-icon"><i data-lucide="armchair"></i></span>
+                        <span class="table-card-number">Table 2</span>
+                    </button>
+                    <button class="table-card-premium" data-table="3">
+                        <span class="table-card-icon"><i data-lucide="armchair"></i></span>
+                        <span class="table-card-number">Table 3</span>
+                    </button>
+                    <button class="table-card-premium" data-table="4">
+                        <span class="table-card-icon"><i data-lucide="armchair"></i></span>
+                        <span class="table-card-number">Table 4</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Actions & Links -->
+            <div class="welcome-actions">
+                <button id="toggleManualBtn" class="btn-action-text">Switch to Scanner</button>
+
+                <div class="admin-links">
+                    <a href="qr-codes.html" class="btn btn-outline btn-sm">
+                        <span>QR Codes</span>
+                        <i data-lucide="qr-code"></i>
+                    </a>
+                    <button id="kitchenAdminBtn" class="btn btn-outline btn-sm">
+                        <span>Kitchen Dashboard</span>
+                        <i data-lucide="chef-hat"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== -->
+    <!-- NAVIGATION -->
+    <!-- ==================== -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="#" class="navbar-brand">
+                <div class="brand-logo">
+                    <img src="assets/images/logo.png" alt="Rannaghor Logo">
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">Rannaghor</span>
+                </div>
+            </a>
+
+
+            <!-- Action Buttons -->
+            <div class="navbar-actions">
+                <!-- My Orders -->
+                <button id="viewOrdersBtn" class="btn btn-outline btn-navbar-action">
+                    <span class="btn-icon"><i data-lucide="clipboard-list"></i></span>
+                    <span class="btn-text">My Orders</span>
+                    <span id="activeOrdersBadge" class="order-badge hidden">0</span>
+                </button>
+
+                <!-- Call Waiter (Desktop) -->
+                <button id="callWaiterBtn" class="btn btn-outline btn-waiter">
+                    <span class="btn-icon"><i data-lucide="bell"></i></span>
+                    <span class="btn-text">Call Waiter</span>
+                </button>
+
+                <!-- Cart Button -->
+                <button id="cartBtn" class="btn btn-outline btn-navbar-action btn-cart" aria-label="View cart">
+                    <span class="btn-icon">
+                        <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </span>
+                    <span class="btn-text">Cart</span>
+                    <span id="cartCount" class="cart-count hidden">0</span>
+                </button>
+
+                <!-- Mobile Menu Toggle (Hidden) -->
+                <button id="mobileMenuBtn" class="btn btn-mobile-menu hidden" aria-label="Toggle menu"
+                    aria-expanded="false" style="display: none !important;">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown (Hidden/Removed in favor of bottom nav) -->
+        <div id="mobileMenu" class="mobile-menu hidden">
+            <!-- Legacy menu items kept just in case, but hidden -->
+        </div>
+    </nav>
+
+    <!-- Bottom navigation removed - buttons unified into top navbar -->
+
+
+    <!-- ==================== -->
+    <!-- CART SIDEBAR -->
+    <!-- ==================== -->
+    <div id="cartOverlay" class="overlay hidden" aria-hidden="true"></div>
+
+    <aside id="cartSidebar" class="cart-sidebar" role="dialog" aria-labelledby="cartTitle" aria-modal="true">
+        <div class="cart-container">
+            <!-- Cart Header -->
+            <header class="cart-header">
+                <h2 id="cartTitle" class="cart-title">Your Order</h2>
+                <button id="closeCart" class="btn-close" aria-label="Close cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </header>
+
+            <!-- Table Info Removed -->
+
+            <!-- Cart Items -->
+            <div class="cart-content">
+                <div id="cartItems" class="cart-items">
+                    <!-- Cart items will be inserted here by JavaScript -->
+                </div>
+
+                <!-- Empty Cart State -->
+                <div id="emptyCart" class="empty-cart">
+                    <div class="empty-cart-icon"><i data-lucide="shopping-bag"></i></div>
+                    <p class="empty-cart-title">Your cart is empty</p>
+                    <p class="empty-cart-subtitle">Add some delicious items!</p>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div id="cartSummary" class="cart-summary hidden">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal"><span class="currency">৳</span>0</span>
+                </div>
+                <div class="summary-row">
+                    <span>VAT (5%)</span>
+                    <span id="vat"><span class="currency">৳</span>0</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total" class="gradient-text"><span class="currency">৳</span>0</span>
+                </div>
+
+                <!-- Special Instructions -->
+                <div class="cart-instructions">
+                    <label for="instructions" class="instructions-label">Special Instructions (Optional)</label>
+                    <textarea id="instructions" class="instructions-input"
+                        placeholder="Any allergies or special requests?" rows="2"></textarea>
+                </div>
+
+                <!-- Payment Method Info -->
+                <div class="payment-method-container">
+                    <div class="payment-options">
+                        <div class="payment-option active">
+                            <span class="payment-icon"><i data-lucide="banknote"></i></span>
+                            <div class="payment-details">
+                                <span class="payment-label">Cash Payment</span>
+                                <span class="payment-sublabel">Please pay at the counter</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Place Order Button -->
+                <button id="placeOrder" class="btn btn-primary btn-place-order">
+                    <span>Place Order</span>
+                    <i data-lucide="send"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ==================== -->
+    <main id="mainContent" class="main-content">
+
+        <!-- ==================== -->
+        <!-- HERO SECTION -->
+        <!-- ==================== -->
+        <section class="hero-section" aria-labelledby="heroTitle">
+            <!-- Unified Full-Screen Specials Background Slider -->
+            <div id="specials" class="specials-slider">
+                <!-- Slide 1 -->
+                <div class="slide active">
+                    <div class="slide-bg"
+                        style="background-image: url('assets/images/food/whole-tandoori-chicken.jpg');"></div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <span class="slide-eyebrow">Today's Special</span>
+                        <div class="special-badge discount">SALE</div>
+                        <h3 class="slide-title">Whole Tandoori Chicken</h3>
+                        <p class="slide-description">
+                            Succulent whole chicken marinated in spiced yogurt and slow-roasted in a traditional clay
+                            oven
+                        </p>
+                        <div class="special-rating" data-id="special1">
+                            <span class="card-rating-star"><i data-lucide="star" class="icon-star-filled"></i></span>
+                            <span class="card-rating-value">0.0</span>
+                            <span class="card-rating-count">(0)</span>
+                        </div>
+                        <div class="slide-footer">
+                            <div class="slide-price">
+                                <span class="price-current"><span class="currency">৳</span>550</span>
+                                <span class="price-original"><span class="currency">৳</span>650</span>
+                            </div>
+                            <button class="btn btn-primary btn-add btn-special" data-id="special1">Add +</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="slide">
+                    <div class="slide-bg" style="background-image: url('assets/images/food/mutton-leg-roast.jpg');">
+                    </div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <span class="slide-eyebrow">Today's Special</span>
+                        <div class="special-badge chef">CHEF'S PICK</div>
+                        <h3 class="slide-title">Mutton Leg Roast</h3>
+                        <p class="slide-description">
+                            A feast-worthy whole mutton leg slow-roasted with aromatic spices and served with saffron
+                            pulao
+                        </p>
+                        <div class="special-rating" data-id="special2">
+                            <span class="card-rating-star"><i data-lucide="star" class="icon-star-filled"></i></span>
+                            <span class="card-rating-value">0.0</span>
+                            <span class="card-rating-count">(0)</span>
+                        </div>
+                        <div class="slide-footer">
+                            <div class="slide-price">
+                                <span class="price-current"><span class="currency">৳</span>1200</span>
+                            </div>
+                            <button class="btn btn-primary btn-add btn-special" data-id="special2">Add +</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="slider-pagination">
+                    <button class="slider-dot active" aria-label="Go to slide 1"></button>
+                    <button class="slider-dot" aria-label="Go to slide 2"></button>
+                </div>
+            </div>
+
+            <!-- The hero-container (text and stats) has been completely removed to let the slider shine -->
+        </section>
+
+        <!-- ==================== -->
+        <!-- MENU SECTION -->
+        <!-- ==================== -->
+        <section id="menu" class="menu-section" aria-labelledby="menuTitle">
+            <div class="section-container">
+                <!-- Section Header -->
+                <header class="section-header">
+                    <h2 id="menuTitle" class="section-title scroll-reveal">
+                        Our <span class="gradient-text">Regular Menu</span>
+                    </h2>
+                    <p class="section-subtitle scroll-reveal">
+                        Authentic Bangladeshi dishes made with love
+                    </p>
+                </header>
+
+                <!-- Search Bar -->
+                <div class="search-container scroll-reveal">
+                    <div class="search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                        <input type="search" id="menuSearch" class="search-input" placeholder="Search dishes..."
+                            aria-label="Search menu">
+                        <button id="clearSearch" class="search-clear hidden" aria-label="Clear search">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="category-tabs scroll-reveal" role="tablist" aria-label="Menu categories">
+                    <button class="category-tab active" data-category="all" role="tab" aria-selected="true">
+                        <span class="tab-icon"><i data-lucide="layout-grid"></i></span>
+                        <span class="tab-text">All</span>
+                    </button>
+                    <button class="category-tab" data-category="biriyani" role="tab" aria-selected="false">
+                        <span class="tab-icon"><i data-lucide="utensils-crossed"></i></span>
+                        <span class="tab-text">Biriyani</span>
+                    </button>
+                    <button class="category-tab" data-category="curry" role="tab" aria-selected="false">
+                        <span class="tab-icon"><i data-lucide="soup"></i></span>
+                        <span class="tab-text">Curry</span>
+                    </button>
+                    <button class="category-tab" data-category="kebab" role="tab" aria-selected="false">
+                        <span class="tab-icon"><i data-lucide="flame"></i></span>
+                        <span class="tab-text">Kebab</span>
+                    </button>
+                    <button class="category-tab" data-category="snacks" role="tab" aria-selected="false">
+                        <span class="tab-icon"><i data-lucide="cookie"></i></span>
+                        <span class="tab-text">Snacks</span>
+                    </button>
+                    <button class="category-tab" data-category="dessert" role="tab" aria-selected="false">
+                        <span class="tab-icon"><i data-lucide="cake-slice"></i></span>
+                        <span class="tab-text">Dessert</span>
+                    </button>
+                    <button class="category-tab" data-category="drinks" role="tab" aria-selected="false">
+                        <span class="tab-icon"><i data-lucide="cup-soda"></i></span>
+                        <span class="tab-text">Drinks</span>
+                    </button>
+                </div>
+
+                <!-- Menu Grid -->
+                <div id="menuGrid" class="menu-grid" role="list">
+                    <!-- Menu items will be inserted here by JavaScript -->
+                </div>
+
+                <!-- No Results Message -->
+                <div id="noResults" class="no-results hidden">
+                    <div class="no-results-icon"><i data-lucide="search"></i></div>
+                    <p class="no-results-title">No dishes found</p>
+                    <p class="no-results-subtitle">Try a different search term</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== -->
+        <!-- FEATURES SECTION -->
+        <!-- ==================== -->
+        <section class="features-section" aria-labelledby="featuresTitle">
+            <div class="section-container">
+                <header class="section-header">
+                    <h2 id="featuresTitle" class="section-title scroll-reveal">
+                        Why <span class="gradient-text">Choose Us</span>
+                    </h2>
+                </header>
+
+                <div class="features-grid">
+                    <div class="feature-card scroll-reveal">
+                        <div class="feature-icon"><i data-lucide="chef-hat"></i></div>
+                        <h3 class="feature-title">Expert Chefs</h3>
+                        <p class="feature-description">Our chefs bring decades of experience in authentic
+                            Bangladeshi cuisine</p>
+                    </div>
+                    <div class="feature-card scroll-reveal">
+                        <div class="feature-icon"><i data-lucide="leaf"></i></div>
+                        <h3 class="feature-title">Fresh Ingredients</h3>
+                        <p class="feature-description">We source the freshest local ingredients daily</p>
+                    </div>
+                    <div class="feature-card scroll-reveal">
+                        <div class="feature-icon"><i data-lucide="zap"></i></div>
+                        <h3 class="feature-title">Quick Service</h3>
+                        <p class="feature-description">Hot food served to your table in 15-20 minutes</p>
+                    </div>
+                    <div class="feature-card scroll-reveal">
+                        <div class="feature-icon"><i data-lucide="check-circle"></i></div>
+                        <h3 class="feature-title">Quality Promise</h3>
+                        <p class="feature-description">100% satisfaction guaranteed or we'll make it right</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- FOOTER -->
+        <!-- ==================== -->
+        <footer class="footer" role="contentinfo">
+            <div class="footer-container">
+                <div class="footer-grid">
+                    <!-- Brand Column -->
+                    <div class="footer-brand">
+                        <div class="footer-logo">
+                            <div class="brand-logo">
+                                <img src="assets/images/logo.png" alt="Rannaghor Logo">
+                            </div>
+                            <div class="brand-text">
+                                <span class="brand-name">Rannaghor</span>
+                            </div>
+                        </div>
+                        <p class="footer-description">
+                            Authentic Bangladeshi cuisine. Every dish tells a story of tradition and
+                            love.
+                        </p>
+                        <div class="social-links">
+                            <a href="#" class="social-link" aria-label="Facebook">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Instagram">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" />
+                                    <circle cx="12" cy="12" r="4" />
+                                    <circle cx="18" cy="6" r="1" />
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Twitter">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Column -->
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Contact</h4>
+                        <ul class="footer-links">
+                            <li>
+                                <span class="footer-icon"><i data-lucide="map-pin"></i></span>
+                                <a href="https://maps.app.goo.gl/3uwBWRVSph2sTfhd8">Mirpur, Dhaka-1216</a>
+                            </li>
+                            <li>
+                                <span class="footer-icon"><i data-lucide="phone"></i></span>
+                                <a href="tel:+8801234567890">+880 1234-567890</a>
+                            </li>
+                            <li>
+                                <span class="footer-icon"><i data-lucide="mail"></i></span>
+                                <a href="mailto:info@rannaghor.com">info@rannaghor.com</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Hours Column -->
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Hours</h4>
+                        <ul class="footer-links">
+                            <li>
+                                <span class="day">Sunday - Thursday</span>
+                                <span class="time">11AM - 11PM</span>
+                            </li>
+                            <li>
+                                <span class="day">Friday</span>
+                                <span class="time">1PM - 11PM</span>
+                            </li>
+                            <li>
+                                <span class="day">Saturday</span>
+                                <span class="time">11AM - 12AM</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Quick Links Column -->
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="#menu">Menu</a></li>
+                            <li><a href="#specials">Today's Specials</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Footer Bottom -->
+                <div class="footer-bottom">
+                    <p>© 2026 Rannaghor. All rights reserved. Made with ❤ in Bangladesh</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- ==================== -->
+    <!-- MODALS -->
+    <!-- ==================== -->
+
+    <!-- Orders History Modal -->
+    <div id="ordersModal" class="modal hidden" role="dialog" aria-labelledby="ordersModalTitle" aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-content modal-md">
+                <header class="modal-header">
+                    <h3 id="ordersModalTitle" class="modal-title">Order History</h3>
+                    <button id="closeOrdersModal" class="btn-close" aria-label="Close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </header>
+                <div class="modal-body">
+                    <div id="ordersList" class="orders-list">
+                        <!-- Orders will be inserted here by JavaScript -->
+                    </div>
+                    <div id="noOrders" class="empty-state">
+                        <div class="empty-state-icon"><i data-lucide="clipboard-list"></i></div>
+                        <p class="empty-state-title">No orders yet</p>
+                        <p class="empty-state-subtitle">Your order history will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Track Order Modal -->
+    <div id="trackOrderModal" class="modal hidden" role="dialog" aria-labelledby="trackOrderModalTitle"
+        aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-content modal-md">
+                <header class="modal-header">
+                    <div class="modal-header-left">
+                        <h3 id="trackOrderModalTitle" class="modal-title">Track Order</h3>
+                        <div class="live-badge">
+                            <div class="live-dot"></div>
+                            <span>Live</span>
+                        </div>
+                    </div>
+                    <button id="closeTrackOrderModal" class="btn-close" aria-label="Close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </header>
+                <div class="modal-body">
+                    <div id="trackOrderList" class="track-order-list">
+                        <!-- Active orders with status tracker will be inserted here -->
+                    </div>
+                    <div id="noActiveOrders" class="empty-state hidden">
+                        <div class="empty-state-icon">✅</div>
+                        <p class="empty-state-title">No active orders</p>
+                        <p class="empty-state-subtitle">All your orders have been served!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div id="successModal" class="modal hidden" role="dialog" aria-labelledby="successModalTitle" aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-content modal-sm">
+                <div class="success-content">
+                    <!-- Animated Checkmark -->
+                    <div class="success-checkmark">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+
+                    <h3 id="successModalTitle" class="success-title">Order Placed!</h3>
+                    <p class="success-subtitle">Your order has been sent to the kitchen</p>
+                    <p class="order-number">Order #<span id="orderNumber">12345</span></p>
+
+                    <!-- Info Cards -->
+                    <div class="success-info-grid">
+                        <div class="success-info-card">
+                            <div class="info-icon"><i data-lucide="clock"></i></div>
+                            <p class="info-label">Estimated Time</p>
+                            <p class="info-value">15-20 min</p>
+                        </div>
+                        <div class="success-info-card">
+                            <div class="info-icon"><i data-lucide="armchair"></i></div>
+                            <p class="info-label">Delivering to</p>
+                            <p class="info-value">Table <span id="successTableNumber">-</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Tip Message -->
+                    <div class="success-tip">
+                        <p><i data-lucide="info" class="inline-icon"></i> Tap <strong>"Track Order"</strong> button to
+                            see real-time status updates</p>
+                    </div>
+
+                    <button id="closeSuccessModal" class="btn btn-primary btn-block">
+                        Continue Ordering
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call Waiter Modal -->
+    <div id="waiterModal" class="modal hidden" role="dialog" aria-labelledby="waiterModalTitle" aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-content modal-sm">
+                <div class="waiter-content">
+                    <div class="waiter-icon"><i data-lucide="bell"></i></div>
+                    <h3 id="waiterModalTitle" class="modal-title">Calling Waiter...</h3>
+                    <p class="waiter-subtitle">A waiter will be with you shortly at Table <span
+                            id="waiterTableNumber">-</span></p>
+
+                    <div class="waiter-actions">
+                        <button id="cancelWaiter" class="btn btn-outline">Cancel</button>
+                        <button id="confirmWaiter" class="btn btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Waiter Called Confirmation Modal -->
+    <div id="waiterCalledModal" class="modal hidden" role="dialog" aria-labelledby="waiterCalledTitle"
+        aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-content modal-sm">
+                <div class="waiter-content">
+                    <div class="waiter-icon success">✅</div>
+                    <h3 id="waiterCalledTitle" class="modal-title">Waiter Notified!</h3>
+                    <p class="waiter-subtitle">Someone will assist you at Table <span
+                            id="waiterCalledTableNumber">-</span> shortly</p>
+
+                    <button id="closeWaiterCalled" class="btn btn-primary btn-block">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div id="itemModal" class="modal hidden" role="dialog" aria-labelledby="itemModalTitle" aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-content modal-md">
+                <button id="closeItemModal" class="btn-close modal-close-top" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <div class="item-modal-content" id="itemModalContent">
+                    <!-- Left Column: Image & Core Info -->
+                    <div class="item-modal-left">
+                        <div class="item-modal-visual">
+                            <div id="itemModalIcon" class="main-image-container">
+                                <!-- Image inserted by JS -->
+                            </div>
+                            <div class="modal-rating-header">
+                                <div class="main-rating-stars">
+                                    <i data-lucide="star" class="icon-star-filled"></i>
+                                </div>
+                                <span id="itemModalAvgRating" class="rating-number">0.0</span>
+                                <span id="itemModalRatingCount" class="rating-count">(0 reviews)</span>
+                            </div>
+                        </div>
+
+                        <div class="item-modal-details-box">
+                            <div class="item-modal-header-info">
+                                <h3 id="itemModalTitle" class="item-title-lg">Item Name</h3>
+                                <p id="itemModalDesc" class="item-desc-md">Description</p>
+                            </div>
+
+                            <div class="item-modal-pricing-row">
+                                <span id="itemModalPrice" class="item-price-lg">৳0</span>
+                                <div class="item-qty-control">
+                                    <button class="qty-btn-v2" id="itemQtyMinus"
+                                        aria-label="Decrease quantity">−</button>
+                                    <span class="qty-val-v2" id="itemQtyValue">1</span>
+                                    <button class="qty-btn-v2" id="itemQtyPlus"
+                                        aria-label="Increase quantity">+</button>
+                                </div>
+                            </div>
+
+                            <button id="addItemToCart" class="btn btn-primary btn-add-cart-v2">
+                                <span>Add to Cart</span>
+                                <span class="btn-divider"></span>
+                                <span id="itemTotalPrice">৳0</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Reviews -->
+                    <div class="item-modal-right">
+                        <div class="reviews-section">
+                            <h4 class="reviews-section-title">CUSTOMER REVIEWS</h4>
+                            <div id="itemReviewsList" class="reviews-scroll-area">
+                                <!-- Reviews inserted by JS -->
+                            </div>
+                            <div id="noReviews" class="no-reviews-placeholder">
+                                <span>No reviews yet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div id="ratingModal" class="modal hidden" role="dialog" aria-labelledby="ratingModalTitle" aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-content modal-md">
+                <!-- Rating View -->
+                <div id="ratingView">
+                    <header class="modal-header">
+                        <div>
+                            <h3 id="ratingModalTitle" class="modal-title">Rate Your Food</h3>
+                            <p class="rating-order-id">Order #<span id="ratingOrderNumber">-</span></p>
+                        </div>
+                        <button id="closeRatingModal" class="btn-close" aria-label="Close">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </header>
+                    <div class="modal-body">
+                        <p class="rating-subtitle">How was each dish? Tap the stars to rate!</p>
+                        <div id="ratingItemsList" class="rating-items-list">
+                            <!-- Per-item rating rows inserted by JS -->
+                        </div>
+                    </div>
+                    <div class="rating-actions">
+                        <button id="skipRating" class="btn btn-outline">Skip</button>
+                        <button id="submitRating" class="btn btn-primary">
+                            <span>Submit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- FLOATING ELEMENTS -->
+    <!-- ==================== -->
+
+    <!-- Floating Cart Button (Mobile) -->
+    <div id="floatingCart" class="floating-cart hidden">
+        <button id="floatingCartBtn" class="fab fab-cart" aria-label="View cart">
+            <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span id="floatingCartCount" class="fab-badge">0</span>
+        </button>
+    </div>
+
+    <!-- Floating Track Order Button -->
+    <div id="floatingTrackOrder" class="floating-track hidden">
+        <button id="floatingTrackBtn" class="fab fab-track">
+            <div class="live-dot"></div>
+            <span class="fab-text">Track Order</span>
+            <span id="floatingOrderCount" class="fab-badge">1</span>
+        </button>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true">
+        <!-- Toast notifications will be inserted here -->
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top hidden" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6" />
+        </svg>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
