@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Dashboard - Rannaghor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/kitchen.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="kitchen-body">
+    <nav class="kitchen-nav">
+        <div class="nav-brand">
+            <div class="brand-icon">
+                <img src="assets/images/logo.png" alt="Rannaghor Logo">
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">Rannaghor</span>
+                <div class="brand-sub-row">
+                    <span class="brand-tagline">Kitchen Dashboard</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-search">
+            <div class="search-wrapper">
+                <input type="text" id="orderSearch" placeholder="Search Food, #Order, or Table...">
+                <span class="search-icon"><i data-lucide="search"></i></span>
+                <button id="clearSearch" class="btn-clear hidden">&times;</button>
+            </div>
+        </div>
+
+    </nav>
+
+    <!-- Mobile Column Selector -->
+    <div class="mobile-tabs-container">
+        <div class="mobile-tabs">
+            <button class="mobile-tab active" data-column="received">New <span
+                    id="mobile-count-received">0</span></button>
+            <button class="mobile-tab" data-column="preparing">Cooking <span
+                    id="mobile-count-preparing">0</span></button>
+            <button class="mobile-tab" data-column="ready">Ready <span id="mobile-count-ready">0</span></button>
+            <button class="mobile-tab" data-column="served">Past <span id="mobile-count-served">0</span></button>
+        </div>
+    </div>
+
+    <main class="kitchen-container">
+        <!-- Service Alerts (Waiter Calls) -->
+        <div id="serviceAlerts" class="service-alerts-container hidden">
+            <!-- Alert cards will be injected here -->
+        </div>
+
+        <!-- Order Sections -->
+        <div class="orders-grid">
+            <!-- Pending Orders -->
+            <section class="order-column" id="column-received">
+                <div class="column-header">
+                    <h2 class="column-title">New Orders</h2>
+                    <span id="count-received" class="column-count">0</span>
+                </div>
+                <div class="order-list" id="list-received">
+                    <!-- Cards injected here -->
+                </div>
+            </section>
+
+            <!-- Preparing Orders -->
+            <section class="order-column" id="column-preparing">
+                <div class="column-header">
+                    <h2 class="column-title">Preparing</h2>
+                    <span id="count-preparing" class="column-count">0</span>
+                </div>
+                <div class="order-list" id="list-preparing">
+                    <!-- Cards injected here -->
+                </div>
+            </section>
+
+            <!-- Ready Orders -->
+            <section class="order-column" id="column-ready">
+                <div class="column-header">
+                    <h2 class="column-title">Ready</h2>
+                    <span id="count-ready" class="column-count">0</span>
+                </div>
+                <div class="order-list" id="list-ready">
+                    <!-- Cards injected here -->
+                </div>
+            </section>
+
+            <!-- Served Orders (History) -->
+            <section class="order-column" id="column-served">
+                <div class="column-header">
+                    <h2 class="column-title">Recently Served</h2>
+                    <span id="count-served" class="column-count">0</span>
+                </div>
+                <div class="order-list" id="list-served">
+                    <!-- Cards injected here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Notification Sound -->
+    <audio id="orderSound" src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3"
+        preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/kitchen.js"></script>
+</body>
+
+</html>
